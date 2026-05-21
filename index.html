@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SS Cyber Panel</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* গ্লোবাল স্টাইল এবং ডার্ক থিম */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #05050d;
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* ব্যাকগ্রাউন্ড ওয়াটারমার্ক */
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            font-family: 'Cinzel', serif;
+            font-size: 8vw;
+            color: rgba(0, 210, 255, 0.025); /* খুব হালকা ওয়াটারমার্ক */
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: -1;
+            user-select: none;
+        }
+
+        /* টপ নেভিগেশন বার (ব্র্যান্ডিং) */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            background: rgba(5, 5, 13, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 50;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: none;
+        }
+
+        .navbar-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            color: #00d2ff;
+            letter-spacing: 2px;
+        }
+
+        /* স্মুথ ওয়েলকাম স্ক্রিন */
+        #welcome-screen {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #05050d;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            animation: fadeOut 1.5s forwards;
+            animation-delay: 2.5s;
+        }
+
+        .shop-title {
+            font-family: 'Cinzel', serif;
+            font-size: 3.5rem;
+            color: #00d2ff;
+            text-shadow: 0 0 30px rgba(0, 210, 255, 0.6);
+            letter-spacing: 3px;
+            animation: fadeIn 1.8s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); filter: blur(5px); }
+            to { opacity: 1; transform: scale(1); filter: blur(0); }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; visibility: visible; }
+            to { opacity: 0; visibility: hidden; z-index: -1; }
+        }
+
+        /* স্ক্রিন ট্রানজিশন কন্ট্রোল */
+        .screen {
+            display: none;
+            width: 100%;
+            max-width: 650px;
+            padding: 40px 20px;
+            margin-top: 80px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .screen.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .screen h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .screen p {
+            color: #8a8aa3;
+            margin-bottom: 30px;
+            font-size: 1rem;
+        }
+
+        /* প্রিমিয়াম সাইবার কার্ড/বাটন */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 480px) {
+            .grid-container { grid-template-columns: 1fr; }
+        }
+
+        .card-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            padding: 25px 20px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 500;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-btn:hover {
+            background: rgba(0, 210, 255, 0.08);
+            border-color: #00d2ff;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 210, 255, 0.15);
+        }
+
+        .card-btn small {
+            color: #00ff88;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* ব্যাক বাটন স্টাইল */
+        .back-btn {
+            background: transparent;
+            color: #8a8aa3;
+            border: none;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 20px;
+            transition: color 0.3s;
+        }
+
+        .back-btn:hover { color: #00d2ff; }
+
+        /* ফর্ম এবং ইনপুট ডিজাইন */
+        .form-container {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.9rem;
+            color: #8a8aa3;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #0c0c14;
+            color: white;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #00d2ff;
+        }
+
+        /* রিঅ্যাক্ট ইমোজি গ্রিড (ইউনিক ড্রপডাউন) */
+        select#react-type {
+            cursor: pointer;
+        }
+
+        .bill-box {
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px dashed #00ff88;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .bill-box span {
+            font-size: 1.8rem;
+            color: #00ff88;
+            font-weight: 600;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: #00ff88;
+            color: #05050d;
+            border: none;
+            padding: 16px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .submit-btn:hover {
+            background: #00cc6a;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ওয়াটারমার্ক ব্যাকগ্রাউন্ড -->
+    <div class="watermark">SS Cyber Panel</div>
+
+    <!-- টপ ব্র্যান্ড বার -->
+    <div class="navbar" id="top-nav">
+        <div class="navbar-title">SS Cyber Panel</div>
+    </div>
+
+    <!-- স্টেপ ০: ওয়েলকাম এনিমেশন স্ক্রিন -->
+    <div id="welcome-screen">
+        <h1 class="shop-title">SS Cyber Panel</h1>
+    </div>
+
+    <!-- স্টেপ ১: মেইন প্ল্যাটফর্ম সিলেকশন স্ক্রিন -->
+    <div id="screen-platforms" class="screen">
+        <h2>Our Services</h2>
+        <p>Select a social media platform to proceed</p>
+        <div class="grid-container">
+            <button class="card-btn" onclick="navigateTo('screen-packages')">Facebook Services</button>
+            <button class="card-btn" onclick="directToWhatsApp('Instagram')">Instagram Services</button>
+            <button class="card-btn" onclick="directToWhatsApp('YouTube')">YouTube Services</button>
+            <button class="card-btn" onclick="directToWhatsApp('TikTok')">TikTok Services</button>
+        </div>
+    </div>
+
+    <!-- স্টেপ ২: ফেসবুক প্যাকেজ স্ক্রিন -->
+    <div id="screen-packages" class="screen">
+        <button class="back-btn" onclick="navigateTo('screen-platforms')">← Back to Platforms</button>
+        <h2>Facebook Services</h2>
+        <p>Choose your desired premium package</p>
+        <div class="grid-container">
+            <button class="card-btn" onclick="setupOrderForm('Facebook BD Follower', 142, 'follower')">FB BD Follower <small>142৳ / 1k</small></button>
+            <button class="card-btn" onclick="setupOrderForm('Facebook Mix Follower', 55, 'follower')">FB Mix Follower <small>55৳ / 1k</small></button>
+            <button class="card-btn" onclick="setupOrderForm('Facebook Post React BD', 149, 'react')">Post React BD <small>149৳ / 1k</small></button>
+            <button class="card-btn" onclick="setupOrderForm('Facebook Post React Mix', 97, 'react')">Post React Mix <small>97৳ / 1k</small></button>
+            <button class="card-btn" onclick="setupOrderForm('Facebook Post Comment BD', 399, 'comment')">Post Comment BD <small>399৳ / 1k</small></button>
+            <button class="card-btn" onclick="setupOrderForm('Facebook Post Comment Mix', 210, 'comment')">Post Comment Mix <small>210৳ / 1k</small></button>
+        </div>
+    </div>
+
+    <!-- স্টেপ ৩: ফাইনাল অর্ডার ফর্ম স্ক্রিন -->
+    <div id="screen-order-form" class="screen">
+        <button class="back-btn" onclick="navigateTo('screen-packages')">← Back to Packages</button>
+        <h2 id="form-service-title">Order Service</h2>
+        <p>Fill in the details below to complete your setup</p>
+        
+        <div class="form-container">
+            <!-- ইউনিক রিঅ্যাক্ট অপশন কন্টেইনার -->
+            <div class="form-group" id="react-selection-group" style="display: none;">
+                <label for="react-type">Select React Type</label>
+                <select id="react-type">
+                    <option value="Love">Love React ❤️</option>
+                    <option value="Care">Care React 🥰</option>
+                    <option value="Haha">Haha React 😆</option>
+                    <option value="Like">Like React 👍</option>
+                    <option value="Sad">Sad React 😢</option>
+                    <option value="Angry">Angry React 😡</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="order-quantity">Quantity (Amount)</label>
+                <input type="number" id="order-quantity" placeholder="Enter amount (e.g., 1000)" oninput="updateLiveBill()">
+            </div>
+
+            <div class="form-group">
+                <label id="dynamic-link-label" for="target-url">Link</label>
+                <input type="text" id="target-url" placeholder="Paste link here...">
+            </div>
+
+            <div class="bill-box">
+                Total Bill: <span id="live-bill">0</span> ৳
+            </div>
+
+            <button class="submit-btn" onclick="sendOrderToWhatsApp()">Place Order via WhatsApp</button>
+        </div>
+    </div>
+
+    <!-- স্ক্রিপ্ট লজিক -->
+    <script>
+        const myWhatsApp = "8801404582584";
+        let activePackageName = "";
+        let activePricePer1k = 0;
+        let activeServiceType = "";
+
+        // স্ক্রিন লোড এনিমেশন হ্যান্ডলার
+        setTimeout(() => {
+            document.getElementById('top-nav').style.display = 'block';
+            navigateTo('screen-platforms');
+        }, 3800); // ওয়েলকাম স্ক্রিন শেষ হওয়ার পর প্রথম স্ক্রিন আনবে
+
+        // এক স্ক্রিন থেকে অন্য স্ক্রিনে যাওয়ার মূল ফাংশন
+        function navigateTo(screenId) {
+            // সব স্ক্রিন থেকে একটিভ ক্লাস রিমুভ করা
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+                setTimeout(() => { screen.style.display = 'none'; }, 200);
+            });
+
+            // টার্গেট স্ক্রিন শো করা
+            const targetScreen = document.getElementById(screenId);
+            setTimeout(() => {
+                targetScreen.style.display = 'block';
+                setTimeout(() => { targetScreen.classList.add('active'); }, 50);
+            }, 250);
+        }
+
+        // ইনস্টাগ্রাম, ইউটিউব, টিকটকের জন্য ডিরেক্ট হোয়াটসঅ্যাপ রিডাইরেক্ট
+        function directToWhatsApp(platformName) {
+            let textMessage = `Hello SS Cyber Panel! I am looking for ${platformName} Services. Please provide me details and pricing.`;
+            let whatsappUrl = `https://wa.me/${myWhatsApp}?text=${encodeURIComponent(textMessage)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // ফেসবুক প্যাকেজ সিলেক্ট করার পর ফর্ম স্ক্রিন রেডি করা
+        function setupOrderForm(packageName, pricePer1k, type) {
+            activePackageName = packageName;
+            activePricePer1k = pricePer1k;
+            activeServiceType = type;
+
+            // ফর্মের হেডার চেঞ্জ করা
+            document.getElementById('form-service-title').innerText = packageName;
+            
+            // পূর্বের ডেটা রিসেট
+            document.getElementById('order-quantity').value = '';
+            document.getElementById('target-url').value = '';
+            document.getElementById('live-bill').innerText = '0';
+
+            // রিঅ্যাক্ট অপশন অন/অফ লজিক
+            if (type === 'react') {
+                document.getElementById('react-selection-group').style.style.display = 'block'; // ভুল টাইপো ফিক্স করা হলো নিচের লাইনে
+                document.getElementById('react-selection-group').style.display = 'block';
+            } else {
+                document.getElementById('react-selection-group').style.display = 'none';
+            }
+
+            // ডায়নামিক লিংক টেক্সট চেঞ্জ
+            if (type === 'follower') {
+                document.getElementById('dynamic-link-label').innerText = 'Page / Profile Link';
+            } else {
+                document.getElementById('dynamic-link-label').innerText = 'Post Link';
+            }
+
+            // ফর্ম স্ক্রিনে নিয়ে যাওয়া
+            navigateTo('screen-order-form');
+        }
+
+        // রিয়েল-টাইম বিল হিসাব
+        function updateLiveBill() {
+            let qty = document.getElementById('order-quantity').value;
+            let currentTotal = (qty / 1000) * activePricePer1k;
+            document.getElementById('live-bill').innerText = currentTotal > 0 ? currentTotal.toFixed(2) : '0';
+        }
+
+        // হোয়াটসঅ্যাপে ডেটা সাবমিট করা
+        function sendOrderToWhatsApp() {
+            let qty = document.getElementById('order-quantity').value;
+            let linkUrl = document.getElementById('target-url').value;
+            let finalBill = document.getElementById('live-bill').innerText;
+            let chosenReact = document.getElementById('react-type').value;
+
+            if (!qty || !linkUrl) {
+                alert("Please fill up the quantity and insert a valid link.");
+                return;
+            }
+
+            let finalMessage = `*⚡ NEW ORDER - SS CYBER PANEL ⚡*\n\n`;
+            finalMessage += `• *Service Name:* ${activePackageName}\n`;
+            
+            if (activeServiceType === 'react') {
+                finalMessage += `• *React Type:* ${chosenReact} React\n`;
+            }
+            
+            finalMessage += `• *Quantity Required:* ${qty}\n`;
+            finalMessage += `• *Target Link:* ${linkUrl}\n`;
+            finalMessage += `• *Calculated Bill:* ${finalBill} BDT\n\n`;
+            finalMessage += `Please accept the order and send payment details.`;
+
+            let waUrl = `https://wa.me/${myWhatsApp}?text=${encodeURIComponent(finalMessage)}`;
+            window.open(waUrl, '_blank');
+        }
+    </script>
+</body>
+</html>
