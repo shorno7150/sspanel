@@ -1,457 +1,1666 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SS Cyber Panel</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <style>
-        /* গ্লোবাল স্টাইল এবং ডার্ক থিম */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SS Cyber Panel V2 - Premium Edition</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030308;
+      --panel: rgba(10, 12, 28, 0.6);
+      --panel2: rgba(20, 24, 48, 0.85);
+      --border: rgba(255, 255, 255, 0.06);
+      --border-glow: rgba(0, 210, 255, 0.3);
+      --text: #f0f3fc;
+      --muted: #828a9e;
+      --accent: #00d2ff;
+      --accent-rgb: 0, 210, 255;
+      --good: #00ff88;
+      --good-rgb: 0, 255, 136;
+      --warn: #ffb74d;
+      --bad: #ff5c7a;
+      --radius: 20px;
+      --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
+      --transition: all 0.35s var(--ease-premium);
+    }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #05050d;
-            color: #ffffff;
-            overflow-x: hidden;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html, body {
+      height: 100%;
+      scroll-behavior: smooth;
+    }
 
-        /* ব্যাকগ্রাউন্ড ওয়াটারমার্ক */
-        .watermark {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-15deg);
-            font-family: 'Cinzel', serif;
-            font-size: 8vw;
-            color: rgba(0, 210, 255, 0.025); /* খুব হালকা ওয়াটারমার্ক */
-            white-space: nowrap;
-            pointer-events: none;
-            z-index: -1;
-            user-select: none;
-        }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: 
+        radial-gradient(circle at 10% 15%, rgba(0, 210, 255, 0.12), transparent 40%),
+        radial-gradient(circle at 90% 85%, rgba(0, 255, 136, 0.08), transparent 45%),
+        #04040a;
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
 
-        /* টপ নেভিগেশন বার (ব্র্যান্ডিং) */
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            padding: 20px;
-            text-align: center;
-            background: rgba(5, 5, 13, 0.8);
-            backdrop-filter: blur(10px);
-            z-index: 50;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            display: none;
-        }
+    /* Elegant Scanline and Grid Overlay */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.8;
+      pointer-events: none;
+      z-index: 1;
+      mask-image: radial-gradient(circle at center, black, transparent 80%);
+    }
 
-        .navbar-title {
-            font-family: 'Cinzel', serif;
-            font-size: 1.5rem;
-            color: #00d2ff;
-            letter-spacing: 2px;
-        }
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 4px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0.3;
+      animation: cyberScan 6s linear infinite;
+      pointer-events: none;
+      z-index: 2;
+    }
 
-        /* স্মুথ ওয়েলকাম স্ক্রিন */
-        #welcome-screen {
-            height: 100vh;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #05050d;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 100;
-            animation: fadeOut 1.5s forwards;
-            animation-delay: 2.5s;
-        }
+    @keyframes cyberScan {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(100vh); }
+    }
 
-        .shop-title {
-            font-family: 'Cinzel', serif;
-            font-size: 3.5rem;
-            color: #00d2ff;
-            text-shadow: 0 0 30px rgba(0, 210, 255, 0.6);
-            letter-spacing: 3px;
-            animation: fadeIn 1.8s ease-in-out;
-        }
+    .watermark {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-12deg);
+      font-family: 'Cinzel', serif;
+      font-size: clamp(4rem, 12vw, 10rem);
+      color: rgba(0, 210, 255, 0.012);
+      background: linear-gradient(135deg, rgba(0, 210, 255, 0.02), rgba(0, 255, 136, 0.01));
+      -webkit-background-clip: text;
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: -1;
+      user-select: none;
+      letter-spacing: 0.15em;
+      font-weight: 800;
+    }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); filter: blur(5px); }
-            to { opacity: 1; transform: scale(1); filter: blur(0); }
-        }
+    /* Topbar Styling */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(4, 4, 10, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      transition: var(--transition);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
 
-        @keyframes fadeOut {
-            from { opacity: 1; visibility: visible; }
-            to { opacity: 0; visibility: hidden; z-index: -1; }
-        }
+    .topbar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
 
-        /* স্ক্রিন ট্রানজিশন কন্ট্রোল */
-        .screen {
-            display: none;
-            width: 100%;
-            max-width: 650px;
-            padding: 40px 20px;
-            margin-top: 80px;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
 
-        .screen.active {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(0, 210, 255, 0.35), rgba(0, 255, 136, 0.15));
+      border: 1px solid rgba(0, 210, 255, 0.4);
+      box-shadow: 
+        0 0 20px rgba(0, 210, 255, 0.15),
+        inset 0 0 12px rgba(255, 255, 255, 0.1);
+      display: grid;
+      place-items: center;
+      font-family: 'Cinzel', serif;
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.15rem;
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+      animation: pulseBrand 3s ease-in-out infinite;
+    }
 
-        .screen h2 {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            color: #ffffff;
-            font-weight: 600;
-        }
+    @keyframes pulseBrand {
+      0%, 100% { box-shadow: 0 0 20px rgba(0, 210, 255, 0.15), inset 0 0 12px rgba(255, 255, 255, 0.1); }
+      50% { box-shadow: 0 0 25px rgba(0, 255, 136, 0.25), inset 0 0 15px rgba(255, 255, 255, 0.2); }
+    }
 
-        .screen p {
-            color: #8a8aa3;
-            margin-bottom: 30px;
-            font-size: 1rem;
-        }
+    .brand h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.15rem;
+      letter-spacing: 2px;
+      background: linear-gradient(90deg, #fff, #b2f5ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: 800;
+    }
 
-        /* প্রিমিয়াম সাইবার কার্ড/বাটন */
-        .grid-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
+    .brand small {
+      display: block;
+      color: var(--muted);
+      font-size: 0.76rem;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+      font-weight: 400;
+    }
 
-        @media (max-width: 480px) {
-            .grid-container { grid-template-columns: 1fr; }
-        }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
 
-        .card-btn {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(12px);
-            padding: 25px 20px;
-            color: white;
-            font-size: 1.1rem;
-            font-weight: 500;
-            border-radius: 16px;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            font-family: 'Poppins', sans-serif;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-        }
+    .chip {
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--muted);
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
 
-        .card-btn:hover {
-            background: rgba(0, 210, 255, 0.08);
-            border-color: #00d2ff;
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 210, 255, 0.15);
-        }
+    .chip::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+      transition: 0.5s;
+    }
 
-        .card-btn small {
-            color: #00ff88;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
+    .chip:hover::before {
+      left: 100%;
+    }
 
-        /* ব্যাক বাটন স্টাইল */
-        .back-btn {
-            background: transparent;
-            color: #8a8aa3;
-            border: none;
-            font-size: 0.95rem;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            margin-bottom: 20px;
-            transition: color 0.3s;
-        }
+    .chip:hover {
+      transform: translateY(-2px);
+      border-color: rgba(0, 210, 255, 0.25);
+      color: #fff;
+      box-shadow: 0 6px 20px rgba(0, 210, 255, 0.08);
+    }
 
-        .back-btn:hover { color: #00d2ff; }
+    .chip.active {
+      background: rgba(0, 210, 255, 0.08);
+      border-color: rgba(0, 210, 255, 0.4);
+      color: var(--accent);
+      box-shadow: 
+        0 0 15px rgba(0, 210, 255, 0.1),
+        inset 0 0 10px rgba(0, 210, 255, 0.05);
+    }
 
-        /* ফর্ম এবং ইনপুট ডিজাইন */
-        .form-container {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 30px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            text-align: left;
-        }
+    /* Welcome / Splash Screen with Futuristic Reveal */
+    .welcome {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #030308;
+      animation: fadeOut 1.1s cubic-bezier(0.8, 0, 0.1, 1) forwards;
+      animation-delay: 2.3s;
+    }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
+    .welcome-logo {
+      width: 80px;
+      height: 80px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, var(--accent), var(--good));
+      display: grid;
+      place-items: center;
+      font-family: 'Cinzel', serif;
+      font-size: 2.2rem;
+      color: #000;
+      font-weight: 900;
+      margin-bottom: 24px;
+      box-shadow: 0 0 40px rgba(0, 210, 255, 0.3);
+      animation: pulseWelcomeLogo 2s infinite ease-in-out;
+    }
 
-        label {
-            display: block;
-            font-size: 0.9rem;
-            color: #8a8aa3;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
+    @keyframes pulseWelcomeLogo {
+      0%, 100% { transform: scale(1) rotate(0deg); filter: brightness(1); }
+      50% { transform: scale(1.05) rotate(5deg); filter: brightness(1.2); }
+    }
 
-        input, select {
-            width: 100%;
-            padding: 14px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: #0c0c14;
-            color: white;
-            font-size: 1rem;
-            font-family: 'Poppins', sans-serif;
-            transition: border-color 0.3s;
-        }
+    .welcome h2 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2rem, 6vw, 3.8rem);
+      letter-spacing: 6px;
+      background: linear-gradient(90deg, #fff, var(--accent), #fff);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 30px rgba(0, 210, 255, 0.2);
+      text-align: center;
+      padding: 0 16px;
+      animation: shimmerText 3s linear infinite, fadeIn 1.35s ease-in-out;
+    }
 
-        input:focus, select:focus {
-            outline: none;
-            border-color: #00d2ff;
-        }
+    @keyframes shimmerText {
+      to { background-position: 200% center; }
+    }
 
-        /* রিঅ্যাক্ট ইমোজি গ্রিড (ইউনিক ড্রপডাউন) */
-        select#react-type {
-            cursor: pointer;
-        }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); filter: blur(8px); }
+      to { opacity: 1; transform: scale(1); filter: blur(0); }
+    }
 
-        .bill-box {
-            background: rgba(0, 255, 136, 0.05);
-            border: 1px dashed #00ff88;
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            margin-top: 25px;
-        }
+    @keyframes fadeOut {
+      from { opacity: 1; visibility: visible; }
+      to { opacity: 0; visibility: hidden; z-index: -1; }
+    }
 
-        .bill-box span {
-            font-size: 1.8rem;
-            color: #00ff88;
-            font-weight: 600;
-        }
+    /* Wrap and Layout */
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 30px 18px 60px;
+      position: relative;
+      z-index: 5;
+    }
 
-        .submit-btn {
-            width: 100%;
-            background: #00ff88;
-            color: #05050d;
-            border: none;
-            padding: 16px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border-radius: 12px;
-            margin-top: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'Poppins', sans-serif;
-        }
+    .screen {
+      display: none;
+      animation: showScreen 0.45s var(--ease-premium);
+    }
 
-        .submit-btn:hover {
-            background: #00cc6a;
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
-            transform: translateY(-2px);
-        }
-    </style>
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes showScreen {
+      from { opacity: 0; transform: translateY(15px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .section-title {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .section-title h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.5px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title h3::after {
+      content: '';
+      position: absolute;
+      bottom: -6px; left: 0; width: 40px; height: 3px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      border-radius: 99px;
+    }
+
+    .section-title p {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-top: 8px;
+    }
+
+    /* Modern Responsive Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .grid { grid-template-columns: 1fr; }
+      .topbar-inner { flex-direction: column; align-items: stretch; }
+      .brand { justify-content: center; text-align: center; flex-direction: column; }
+      .nav-actions { justify-content: center; margin-top: 10px; }
+      .section-title { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .section-title .chip { align-self: flex-end; }
+    }
+
+    /* Glassmorphic Cyber Button Cards */
+    .card-btn {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 26px 22px;
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 700;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+      min-height: 110px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-btn::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0; width: 60px; height: 60px;
+      background: radial-gradient(circle, rgba(0, 210, 255, 0.15), transparent 70%);
+      pointer-events: none;
+      transition: var(--transition);
+    }
+
+    .card-btn:hover {
+      transform: translateY(-6px) scale(1.01);
+      background: rgba(15, 20, 45, 0.7);
+      border-color: rgba(0, 210, 255, 0.35);
+      box-shadow: 
+        0 16px 40px rgba(0, 210, 255, 0.12),
+        inset 0 0 15px rgba(0, 210, 255, 0.05);
+    }
+
+    .card-btn:hover::after {
+      transform: scale(1.8);
+      opacity: 1;
+    }
+
+    .card-btn small {
+      color: var(--good);
+      font-size: 0.84rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(0, 255, 136, 0.06);
+      padding: 4px 10px;
+      border-radius: 999px;
+      width: fit-content;
+      border: 1px solid rgba(0, 255, 136, 0.12);
+      transition: var(--transition);
+    }
+
+    .card-btn:hover small {
+      background: rgba(0, 255, 136, 0.12);
+      border-color: rgba(0, 255, 136, 0.3);
+      box-shadow: 0 0 10px rgba(0, 255, 136, 0.1);
+    }
+
+    .card-btn:active {
+      transform: translateY(-2px);
+    }
+
+    /* Glass Panels */
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    .panel::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0.4;
+    }
+
+    /* Buttons with Cyber glow and transition */
+    .back-btn {
+      background: transparent;
+      color: var(--muted);
+      border: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      transition: var(--transition);
+    }
+
+    .back-btn:hover {
+      color: var(--accent);
+      background: rgba(0, 210, 255, 0.05);
+      border-color: rgba(0, 210, 255, 0.2);
+      transform: translateX(-4px);
+    }
+
+    /* Form Fields Styling */
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text);
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: var(--transition);
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 15px 18px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(4, 4, 10, 0.8);
+      color: #fff;
+      font-size: 0.98rem;
+      font-family: 'Poppins', sans-serif;
+      outline: none;
+      transition: var(--transition);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: rgba(130, 138, 158, 0.5);
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 
+        0 0 18px rgba(0, 210, 255, 0.15),
+        inset 0 1px 2px rgba(0,0,0,0.8);
+      background: rgba(8, 8, 18, 0.9);
+    }
+
+    /* Form field label glow effect when focused */
+    .form-group focus-within label {
+      color: var(--accent);
+      text-shadow: 0 0 8px rgba(0, 210, 255, 0.2);
+    }
+
+    .help {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    .help strong {
+      color: var(--warn);
+      text-decoration: underline;
+    }
+
+    /* Bill Display styling */
+    .bill {
+      background: radial-gradient(circle at center, rgba(0, 255, 136, 0.06), rgba(0, 255, 136, 0.02));
+      border: 1px dashed rgba(0, 255, 136, 0.5);
+      border-radius: 16px;
+      padding: 20px 18px;
+      text-align: center;
+      line-height: 1.7;
+      margin-top: 24px;
+      position: relative;
+      box-shadow: inset 0 0 15px rgba(0, 255, 136, 0.03);
+    }
+
+    .bill strong {
+      font-size: 2.2rem;
+      color: var(--good);
+      text-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+      display: block;
+      margin-top: 4px;
+      font-weight: 800;
+    }
+
+    /* Button Action styling */
+    .btn {
+      width: 100%;
+      border: none;
+      border-radius: 14px;
+      padding: 16px 20px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      transition: var(--transition);
+      margin-top: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--good), var(--accent));
+      color: #030308;
+      box-shadow: 0 10px 25px rgba(0, 255, 136, 0.15);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(0, 255, 136, 0.25);
+      filter: brightness(1.08);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.04);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-danger {
+      background: rgba(255, 92, 122, 0.08);
+      color: #ffdfe5;
+      border: 1px solid rgba(255, 92, 122, 0.2);
+    }
+
+    .btn-danger:hover {
+      background: rgba(255, 92, 122, 0.15);
+      border-color: rgba(255, 92, 122, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* Elegant Custom Scrollbars & Tables */
+    .table-wrap {
+      overflow: auto;
+      border-radius: var(--radius);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .table-wrap::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    .table-wrap::-webkit-scrollbar-track {
+      background: rgba(0,0,0,0.2);
+    }
+
+    .table-wrap::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 99px;
+    }
+
+    .table-wrap::-webkit-scrollbar-thumb:hover {
+      background: var(--accent);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      min-width: 920px;
+      background: rgba(255, 255, 255, 0.01);
+    }
+
+    th, td {
+      padding: 16px 14px;
+      text-align: left;
+      font-size: 0.9rem;
+      vertical-align: middle;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    th {
+      color: #b2f5ff;
+      background: rgba(255, 255, 255, 0.03);
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 700;
+    }
+
+    tr {
+      transition: var(--transition);
+    }
+
+    tr:hover td {
+      background: rgba(0, 210, 255, 0.02);
+    }
+
+    td {
+      color: #e2e8f0;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    /* Badges with dynamic glow styling */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border: 1px solid transparent;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .pending {
+      background: rgba(255, 183, 77, 0.08);
+      color: #ffb74d;
+      border-color: rgba(255, 183, 77, 0.25);
+      box-shadow: 0 0 10px rgba(255, 183, 77, 0.05);
+    }
+
+    .confirmed {
+      background: rgba(0, 210, 255, 0.08);
+      color: #6ee7ff;
+      border-color: rgba(0, 210, 255, 0.25);
+      box-shadow: 0 0 10px rgba(0, 210, 255, 0.05);
+    }
+
+    .processing {
+      background: rgba(255, 255, 255, 0.04);
+      color: #f1f5f9;
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .completed {
+      background: rgba(0, 255, 136, 0.08);
+      color: #52ffaa;
+      border-color: rgba(0, 255, 136, 0.25);
+      box-shadow: 0 0 10px rgba(0, 255, 136, 0.05);
+    }
+
+    .cancelled {
+      background: rgba(255, 92, 122, 0.08);
+      color: #ffa1b2;
+      border-color: rgba(255, 92, 122, 0.25);
+    }
+
+    /* Toast Stack & Advanced Animation */
+    .toast-stack {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      z-index: 1100;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      pointer-events: none;
+    }
+
+    .toast {
+      min-width: min(360px, calc(100vw - 48px));
+      background: rgba(4, 4, 10, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-left: 4px solid var(--accent);
+      border-radius: 16px;
+      padding: 16px 18px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      animation: toastIn 0.4s var(--ease-premium), toastOut 0.4s var(--ease-premium) 3.1s forwards;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .toast.success { border-left-color: var(--good); }
+    .toast.error { border-left-color: var(--bad); }
+    .toast.info { border-left-color: var(--accent); }
+
+    .toast .t {
+      font-weight: 700;
+      margin-bottom: 4px;
+      font-size: 0.95rem;
+      color: #fff;
+    }
+
+    .toast .m {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.4;
+    }
+
+    /* Countdown indicator on Toast */
+    .toast::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; width: 100%; height: 3px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .toast::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; width: 100%; height: 3px;
+      background: inherit;
+      animation: toastProgress 3s linear forwards;
+    }
+
+    @keyframes toastProgress {
+      0% { width: 100%; }
+      100% { width: 0%; }
+    }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(50px) translateY(-10px); }
+      to { opacity: 1; transform: translateX(0) translateY(0); }
+    }
+
+    @keyframes toastOut {
+      to { opacity: 0; transform: translateX(50px); }
+    }
+
+    /* Fluid Overlays and Modals */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 3, 8, 0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1200;
+      padding: 18px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .overlay.show {
+      display: flex;
+      opacity: 1;
+    }
+
+    .box {
+      width: min(100%, 420px);
+      background: rgba(14, 16, 32, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 30px 24px;
+      text-align: center;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+      transform: scale(0.9);
+      transition: transform 0.35s var(--ease-premium);
+    }
+
+    .overlay.show .box {
+      transform: scale(1);
+    }
+
+    .spinner {
+      width: 46px;
+      height: 46px;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      border: 3px solid rgba(255, 255, 255, 0.05);
+      border-top-color: var(--accent);
+      border-right-color: var(--good);
+      animation: spin 1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .box h4 {
+      margin-bottom: 8px;
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .box p {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    /* Modal Backdrop and Animation */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 3, 8, 0.8);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1050;
+      padding: 18px;
+      opacity: 0;
+      transition: opacity 0.35s var(--ease-premium);
+    }
+
+    .modal-backdrop.show {
+      display: flex;
+      opacity: 1;
+    }
+
+    .modal {
+      width: min(100%, 560px);
+      background: rgba(12, 14, 30, 0.98);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7);
+      transform: translateY(20px) scale(0.95);
+      transition: transform 0.4s var(--ease-premium);
+    }
+
+    .modal-backdrop.show .modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-head {
+      padding: 22px 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      background: linear-gradient(180deg, rgba(0, 210, 255, 0.06), transparent);
+    }
+
+    .modal-head h3 {
+      font-size: 1.3rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+    }
+
+    .modal-body {
+      padding: 24px;
+    }
+
+    .summary {
+      display: grid;
+      gap: 12px;
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      transition: var(--transition);
+    }
+
+    .summary-item:hover {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(0, 210, 255, 0.15);
+    }
+
+    .summary-label {
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 500;
+    }
+
+    .summary-value {
+      color: #fff;
+      font-weight: 700;
+      text-align: right;
+      word-break: break-word;
+      font-size: 0.94rem;
+    }
+
+    .modal-foot {
+      display: flex;
+      gap: 14px;
+      padding: 20px 24px 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .modal-foot .btn {
+      margin-top: 0;
+    }
+
+    /* Admin Panel Layout enhancements */
+    .admin-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .admin-stat {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 20px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    .admin-stat::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 4px; height: 100%;
+      background: var(--accent);
+    }
+
+    .admin-stat:nth-child(2)::after { background: var(--warn); }
+    .admin-stat:nth-child(3)::after { background: var(--good); }
+    .admin-stat:nth-child(4)::after { background: #dff; }
+
+    .admin-stat:hover {
+      transform: translateY(-4px);
+      background: rgba(255, 255, 255, 0.04);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .admin-stat .label {
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .admin-stat .value {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    @media (max-width: 920px) {
+      .admin-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    
+    @media (max-width: 540px) {
+      .admin-grid { grid-template-columns: 1fr; }
+      .modal-foot { flex-direction: column; }
+    }
+  </style>
 </head>
 <body>
+  <!-- Welcome/Splash Transition Screen -->
+  <div class="welcome" id="welcome">
+    <div class="welcome-logo">SS</div>
+    <h2>SS Cyber Panel</h2>
+  </div>
+  
+  <div class="watermark">SS Cyber Panel</div>
 
-    <!-- ওয়াটারমার্ক ব্যাকগ্রাউন্ড -->
-    <div class="watermark">SS Cyber Panel</div>
-
-    <!-- টপ ব্র্যান্ড বার -->
-    <div class="navbar" id="top-nav">
-        <div class="navbar-title">SS Cyber Panel</div>
-    </div>
-
-    <!-- স্টেপ ০: ওয়েলকাম এনিমেশন স্ক্রিন -->
-    <div id="welcome-screen">
-        <h1 class="shop-title">SS Cyber Panel</h1>
-    </div>
-
-    <!-- স্টেপ ১: মেইন প্ল্যাটফর্ম সিলেকশন স্ক্রিন -->
-    <div id="screen-platforms" class="screen">
-        <h2>Our Services</h2>
-        <p>Select a social media platform to proceed</p>
-        <div class="grid-container">
-            <button class="card-btn" onclick="navigateTo('screen-packages')">Facebook Services</button>
-            <button class="card-btn" onclick="directToWhatsApp('Instagram')">Instagram Services</button>
-            <button class="card-btn" onclick="directToWhatsApp('YouTube')">YouTube Services</button>
-            <button class="card-btn" onclick="directToWhatsApp('TikTok')">TikTok Services</button>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-mark">SS</div>
+        <div>
+          <h1>SS Cyber Panel</h1>
+          <small>Premium order flow · bKash · WhatsApp · Admin</small>
         </div>
+      </div>
+      <div class="nav-actions">
+        <button class="chip active" id="tab-public" onclick="switchTab('public')">Customer Panel</button>
+        <button class="chip" id="tab-admin" onclick="switchTab('admin')">Admin Panel</button>
+      </div>
     </div>
+  </div>
 
-    <!-- স্টেপ ২: ফেসবুক প্যাকেজ স্ক্রিন -->
-    <div id="screen-packages" class="screen">
-        <button class="back-btn" onclick="navigateTo('screen-platforms')">← Back to Platforms</button>
-        <h2>Facebook Services</h2>
-        <p>Choose your desired premium package</p>
-        <div class="grid-container">
-            <button class="card-btn" onclick="setupOrderForm('Facebook BD Follower', 125, 'follower')">FB BD Follower <small>125৳ / 1k</small></button>
-            <button class="card-btn" onclick="setupOrderForm('Facebook Mix Follower', 52, 'follower')">FB Mix Follower <small>52৳ / 1k</small></button>
-            <button class="card-btn" onclick="setupOrderForm('Facebook Post React BD', 139, 'react')">Post React BD <small>139৳ / 1k</small></button>
-            <button class="card-btn" onclick="setupOrderForm('Facebook Post React Mix', 44, 'react')">Post React Mix <small>44৳ / 1k</small></button>
-            <button class="card-btn" onclick="setupOrderForm('Facebook Post Comment BD', 399, 'comment')">Post Comment BD <small>399৳ / 1k</small></button>
-            <button class="card-btn" onclick="setupOrderForm('Facebook Post Comment Mix', 210, 'comment')">Post Comment Mix <small>210৳ / 1k</small></button>
+  <div class="toast-stack" id="toast-stack"></div>
+
+  <!-- Loading Overlay -->
+  <div class="overlay" id="loading-overlay" aria-hidden="true">
+    <div class="box">
+      <div class="spinner"></div>
+      <h4 id="loading-title">Processing</h4>
+      <p id="loading-text">Please wait...</p>
+    </div>
+  </div>
+
+  <!-- Summary Confirmation Modal -->
+  <div class="modal-backdrop" id="summary-backdrop">
+    <div class="modal">
+      <div class="modal-head"><h3>Confirm Your Order</h3></div>
+      <div class="modal-body">
+        <div class="summary">
+          <div class="summary-item"><div class="summary-label">Service</div><div class="summary-value" id="sum-service">-</div></div>
+          <div class="summary-item"><div class="summary-label">Quantity</div><div class="summary-value" id="sum-qty">-</div></div>
+          <div class="summary-item" id="sum-react-row" style="display:none"><div class="summary-label">React Type</div><div class="summary-value" id="sum-react">-</div></div>
+          <div class="summary-item"><div class="summary-label">Target Link</div><div class="summary-value" id="sum-link">-</div></div>
+          <div class="summary-item"><div class="summary-label">bKash TXN ID</div><div class="summary-value" id="sum-txn">-</div></div>
+          <div class="summary-item"><div class="summary-label">Total Bill</div><div class="summary-value" id="sum-bill">-</div></div>
         </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-secondary" id="summary-cancel">Cancel</button>
+        <button class="btn btn-primary" id="summary-confirm">Confirm & Open WhatsApp</button>
+      </div>
     </div>
+  </div>
 
-    <!-- স্টেপ ৩: ফাইনাল অর্ডার ফর্ম স্ক্রিন -->
-    <div id="screen-order-form" class="screen">
-        <button class="back-btn" onclick="navigateTo('screen-packages')">← Back to Packages</button>
-        <h2 id="form-service-title">Order Service</h2>
-        <p>Fill in the details below to complete your setup</p>
-        
-        <div class="form-container">
-            <!-- ইউনিক রিঅ্যাক্ট অপশন কন্টেইনার -->
-            <div class="form-group" id="react-selection-group" style="display: none;">
-                <label for="react-type">Select React Type</label>
-                <select id="react-type">
-                    <option value="Love">Love React ❤️</option>
-                    <option value="Care">Care React 🥰</option>
-                    <option value="Haha">Haha React 😆</option>
-                    <option value="Like">Like React 👍</option>
-                    <option value="Sad">Sad React 😢</option>
-                    <option value="Angry">Angry React 😡</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="order-quantity">Quantity (Amount)</label>
-                <input type="number" id="order-quantity" placeholder="Enter amount (e.g., 1000)" oninput="updateLiveBill()">
-            </div>
-
-            <div class="form-group">
-                <label id="dynamic-link-label" for="target-url">Link</label>
-                <input type="text" id="target-url" placeholder="Paste link here...">
-            </div>
-
-            <div class="bill-box">
-                Total Bill: <span id="live-bill">0</span> ৳
-            </div>
-
-            <button class="submit-btn" onclick="sendOrderToWhatsApp()">Place Order via WhatsApp</button>
+  <main class="wrap">
+    <!-- Public/Client Section -->
+    <section id="screen-public" class="screen active">
+      <div class="section-title">
+        <div>
+          <h3>Choose a platform</h3>
+          <p>Select a service category.</p>
         </div>
-    </div>
+      </div>
+      <div class="grid" id="platform-grid">
+        <button class="card-btn" onclick="goPackageScreen()">Facebook Services <small>Packages & order form</small></button>
+        <button class="card-btn" onclick="directWhatsApp('Instagram')">Instagram Services <small>Quick WhatsApp contact</small></button>
+        <button class="card-btn" onclick="directWhatsApp('YouTube')">YouTube Services <small>Quick WhatsApp contact</small></button>
+        <button class="card-btn" onclick="directWhatsApp('TikTok')">TikTok Services <small>Quick WhatsApp contact</small></button>
+      </div>
 
-    <!-- স্ক্রিপ্ট লজিক -->
-    <script>
-        const myWhatsApp = "8801404582584";
-        let activePackageName = "";
-        let activePricePer1k = 0;
-        let activeServiceType = "";
+      <!-- Packages Screen Area -->
+      <div id="packages-screen" style="display:none;margin-top:24px">
+        <div class="section-title">
+          <div>
+            <h3>Facebook packages</h3>
+            <p>Choose one package.</p>
+          </div>
+          <button class="chip" onclick="backToPlatforms()">Back</button>
+        </div>
+        <div class="grid">
+          <button class="card-btn" onclick="setupOrderForm('Facebook BD Follower', 125, 'follower')">FB BD Follower <small>125৳ / 1k</small></button>
+          <button class="card-btn" onclick="setupOrderForm('Facebook Mix Follower', 52, 'follower')">FB Mix Follower <small>52৳ / 1k</small></button>
+          <button class="card-btn" onclick="setupOrderForm('Facebook Post React BD', 139, 'react')">Post React BD <small>139৳ / 1k</small></button>
+          <button class="card-btn" onclick="setupOrderForm('Facebook Post React Mix', 44, 'react')">Post React Mix <small>44৳ / 1k</small></button>
+          <button class="card-btn" onclick="setupOrderForm('Facebook Post Comment BD', 399, 'comment')">Post Comment BD <small>399৳ / 1k</small></button>
+          <button class="card-btn" onclick="setupOrderForm('Facebook Post Comment Mix', 210, 'comment')">Post Comment Mix <small>210৳ / 1k</small></button>
+        </div>
+      </div>
 
-        // স্ক্রিন লোড এনিমেশন হ্যান্ডলার
+      <!-- Interactive Order Screen -->
+      <div id="order-screen" style="display:none;margin-top:24px">
+        <div class="section-title">
+          <div>
+            <h3 id="form-title">Order Service</h3>
+            <p>Enter details and continue to confirmation.</p>
+          </div>
+          <button class="chip" onclick="backToPackages()">Back</button>
+        </div>
+        <div class="panel">
+          <div class="form-group" id="react-group" style="display:none">
+            <label for="react-type">Select React Type</label>
+            <select id="react-type">
+              <option value="Love">Love React ❤️</option>
+              <option value="Care">Care React 🥰</option>
+              <option value="Haha">Haha React 😆</option>
+              <option value="Like">Like React 👍</option>
+              <option value="Sad">Sad React 😢</option>
+              <option value="Angry">Angry React 😡</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="qty">Quantity</label>
+            <input type="number" id="qty" min="1" step="1" placeholder="Enter amount, e.g. 1000" oninput="updateBill()" />
+          </div>
+
+          <div class="form-group">
+            <label for="target-link" id="link-label">Link</label>
+            <input type="text" id="target-link" placeholder="Paste link here..." />
+            <div class="help">Use a valid http or https link.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="txn-id">bKash Transaction ID</label>
+            <input type="text" id="txn-id" placeholder="Paste your transaction ID" />
+            <div class="help">Send money to <strong>01858561346</strong> and paste the TXN ID here.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="customer-whatsapp">Your WhatsApp Number</label>
+            <input type="text" id="customer-whatsapp" placeholder="Optional" />
+          </div>
+
+          <div class="bill">Total Bill: <strong id="live-bill">0</strong> ৳</div>
+          <button class="btn btn-primary" onclick="reviewOrder()">Review & Confirm</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Admin Section -->
+    <section id="screen-admin" class="screen" style="display:none">
+      <div class="section-title">
+        <div>
+          <h3>Admin Dashboard</h3>
+          <p>Login to manage orders.</p>
+        </div>
+        <div class="row">
+          <button class="chip" onclick="logoutAdmin()">Logout</button>
+        </div>
+      </div>
+
+      <!-- Admin Login -->
+      <div id="admin-login" class="panel" style="max-width:520px; margin: 0 auto;">
+        <div class="form-group">
+          <label for="admin-email">Admin Email</label>
+          <input type="email" id="admin-email" placeholder="Enter admin email" />
+        </div>
+        <div class="form-group">
+          <label for="admin-password">Password</label>
+          <input type="password" id="admin-password" placeholder="Enter password" />
+        </div>
+        <button class="btn btn-primary" onclick="loginAdmin()">Login</button>
+      </div>
+
+      <!-- Admin Dashboard Content -->
+      <div id="admin-dashboard" style="display:none">
+        <div class="admin-grid">
+          <div class="admin-stat"><div class="label">Total Orders</div><div class="value" id="stat-total">0</div></div>
+          <div class="admin-stat"><div class="label">Pending</div><div class="value" id="stat-pending">0</div></div>
+          <div class="admin-stat"><div class="label">Completed</div><div class="value" id="stat-completed">0</div></div>
+          <div class="admin-stat"><div class="label">Revenue</div><div class="value"><span id="stat-revenue">0</span> ৳</div></div>
+        </div>
+
+        <div class="panel" style="margin-bottom:24px">
+          <div class="row" style="justify-content:space-between;align-items:center;gap:16px">
+            <div>
+              <h3 style="font-size:1.2rem;margin-bottom:4px">Orders</h3>
+              <p class="muted">Manage order status and customer flow.</p>
+            </div>
+            <div class="row">
+              <button class="chip" onclick="seedDemoOrders()">Add Demo Orders</button>
+              <button class="chip" onclick="clearAllOrders()">Clear All</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Service</th>
+                <th>Qty</th>
+                <th>TXN ID</th>
+                <th>Bill</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="orders-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const ADMIN_EMAIL = "shornosr@gmail.com";
+    const ADMIN_PASSWORD = "rs@sspanel";
+    const BKASH_NUMBER = "01858561346";
+    const WHATSAPP_NUMBER = "8801404582584";
+    const STORAGE_KEY = "sscyberpanel_orders_v2";
+    const ADMIN_KEY = "sscyberpanel_admin_logged_in";
+
+    let activePackageName = "";
+    let activePricePer1k = 0;
+    let activeServiceType = "";
+    let pendingWhatsAppUrl = "";
+    let pendingOrder = null;
+
+    const welcomeEl = document.getElementById('welcome');
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const loadingTitle = document.getElementById('loading-title');
+    const loadingText = document.getElementById('loading-text');
+    const summaryBackdrop = document.getElementById('summary-backdrop');
+    const toastStack = document.getElementById('toast-stack');
+    const publicScreen = document.getElementById('screen-public');
+    const adminScreen = document.getElementById('screen-admin');
+    const publicPackages = document.getElementById('packages-screen');
+    const orderArea = document.getElementById('order-screen');
+    const adminLogin = document.getElementById('admin-login');
+    const adminDashboard = document.getElementById('admin-dashboard');
+    const platformGrid = document.getElementById('platform-grid');
+
+    setTimeout(() => {
+      welcomeEl.style.display = 'none';
+      switchTab('public');
+    }, 2500);
+
+    function showToast(title, message, type = 'info') {
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `<div class="t">${title}</div><div class="m">${message}</div>`;
+      toastStack.appendChild(toast);
+      setTimeout(() => {
+        toast.style.animation = 'toastOut 0.4s var(--ease-premium) forwards';
+        setTimeout(() => toast.remove(), 400);
+      }, 3000);
+    }
+
+    function showLoading(title, text) {
+      loadingTitle.textContent = title || 'Processing';
+      loadingText.textContent = text || 'Please wait...';
+      loadingOverlay.classList.add('show');
+      loadingOverlay.setAttribute('aria-hidden', 'false');
+    }
+
+    function hideLoading() {
+      loadingOverlay.classList.remove('show');
+      loadingOverlay.setAttribute('aria-hidden', 'true');
+    }
+
+    function openSummary() { 
+      summaryBackdrop.style.display = 'flex';
+      setTimeout(() => {
+        summaryBackdrop.classList.add('show');
+      }, 10);
+    }
+    
+    function closeSummary() { 
+      summaryBackdrop.classList.remove('show');
+      setTimeout(() => {
+        summaryBackdrop.style.display = 'none';
+      }, 350);
+    }
+
+    function getOrders() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+      catch { return []; }
+    }
+
+    function saveOrders(orders) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+      renderAdmin();
+    }
+
+    function generateId() {
+      return 'SS-' + Math.random().toString(36).slice(2, 8).toUpperCase();
+    }
+
+    function formatDate(ms) {
+      const d = new Date(ms);
+      return d.toLocaleString([], {
+        year: 'numeric', month: 'short', day: '2-digit',
+        hour: '2-digit', minute: '2-digit'
+      });
+    }
+
+    function validateLink(url) {
+      const trimmed = (url || '').trim();
+      if (!trimmed) return false;
+      try {
+        const u = new URL(trimmed);
+        return u.protocol === 'http:' || u.protocol === 'https:';
+      } catch {
+        return false;
+      }
+    }
+
+    function switchTab(tab) {
+      document.getElementById('tab-public').classList.toggle('active', tab === 'public');
+      document.getElementById('tab-admin').classList.toggle('active', tab === 'admin');
+      
+      // Fluid content fade switch
+      if (tab === 'public') {
+        adminScreen.classList.remove('active');
         setTimeout(() => {
-            document.getElementById('top-nav').style.display = 'block';
-            navigateTo('screen-platforms');
-        }, 3800); // ওয়েলকাম স্ক্রিন শেষ হওয়ার পর প্রথম স্ক্রিন আনবে
+          adminScreen.style.display = 'none';
+          publicScreen.style.display = 'block';
+          setTimeout(() => publicScreen.classList.add('active'), 10);
+        }, 150);
+      } else {
+        publicScreen.classList.remove('active');
+        setTimeout(() => {
+          publicScreen.style.display = 'none';
+          adminScreen.style.display = 'block';
+          setTimeout(() => adminScreen.classList.add('active'), 10);
+          
+          const adminLogged = localStorage.getItem(ADMIN_KEY) === 'yes';
+          adminLogin.style.display = adminLogged ? 'none' : 'block';
+          adminDashboard.style.display = adminLogged ? 'block' : 'none';
+          if (adminLogged) renderAdmin();
+        }, 150);
+      }
+    }
 
-        // এক স্ক্রিন থেকে অন্য স্ক্রিনে যাওয়ার মূল ফাংশন
-        function navigateTo(screenId) {
-            // সব স্ক্রিন থেকে একটিভ ক্লাস রিমুভ করা
-            document.querySelectorAll('.screen').forEach(screen => {
-                screen.classList.remove('active');
-                setTimeout(() => { screen.style.display = 'none'; }, 200);
-            });
+    function goPackageScreen() {
+      platformGrid.classList.remove('active');
+      platformGrid.style.display = 'none';
+      publicPackages.style.display = 'block';
+      setTimeout(() => publicPackages.classList.add('active'), 10);
+      orderArea.style.display = 'none';
+      showToast('Facebook Services', 'Select a Premium Facebook Package.', 'info');
+    }
 
-            // টার্গেট স্ক্রিন শো করা
-            const targetScreen = document.getElementById(screenId);
-            setTimeout(() => {
-                targetScreen.style.display = 'block';
-                setTimeout(() => { targetScreen.classList.add('active'); }, 50);
-            }, 250);
+    function backToPlatforms() {
+      publicPackages.classList.remove('active');
+      publicPackages.style.display = 'none';
+      platformGrid.style.display = 'grid';
+      setTimeout(() => platformGrid.classList.add('active'), 10);
+      orderArea.style.display = 'none';
+    }
+
+    function backToPackages() {
+      orderArea.classList.remove('active');
+      orderArea.style.display = 'none';
+      publicPackages.style.display = 'block';
+      setTimeout(() => publicPackages.classList.add('active'), 10);
+    }
+
+    function directWhatsApp(platformName) {
+      const text = `Hello SS Cyber Panel! I am looking for ${platformName} Services. Please provide details and pricing.`;
+      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
+    }
+
+    function setupOrderForm(packageName, pricePer1k, type) {
+      activePackageName = packageName;
+      activePricePer1k = pricePer1k;
+      activeServiceType = type;
+
+      document.getElementById('form-title').innerText = packageName;
+      document.getElementById('qty').value = '';
+      document.getElementById('target-link').value = '';
+      document.getElementById('txn-id').value = '';
+      document.getElementById('customer-whatsapp').value = '';
+      document.getElementById('react-type').selectedIndex = 0;
+      document.getElementById('live-bill').innerText = '0';
+
+      document.getElementById('react-group').style.display = type === 'react' ? 'block' : 'none';
+      document.getElementById('link-label').innerText = type === 'follower' ? 'Page / Profile Link' : 'Post Link';
+
+      publicPackages.classList.remove('active');
+      publicPackages.style.display = 'none';
+      platformGrid.style.display = 'none';
+      orderArea.style.display = 'block';
+      setTimeout(() => orderArea.classList.add('active'), 10);
+      showToast('Package Selected', packageName, 'success');
+    }
+
+    function updateBill() {
+      const qty = Number(document.getElementById('qty').value);
+      const total = qty > 0 ? (qty / 1000) * activePricePer1k : 0;
+      document.getElementById('live-bill').innerText = total > 0 ? total.toFixed(2) : '0';
+    }
+
+    function reviewOrder() {
+      const qtyRaw = document.getElementById('qty').value.trim();
+      const qty = Number(qtyRaw);
+      const link = document.getElementById('target-link').value.trim();
+      const txn = document.getElementById('txn-id').value.trim();
+      const customerWhatsapp = document.getElementById('customer-whatsapp').value.trim();
+      const bill = document.getElementById('live-bill').innerText;
+      const reactType = document.getElementById('react-type').value;
+
+      if (!qtyRaw || Number.isNaN(qty) || qty <= 0) {
+        showToast('Invalid Quantity', 'Please enter a valid quantity.', 'error');
+        return;
+      }
+      if (!validateLink(link)) {
+        showToast('Invalid Link', 'Please paste a valid link starting with http/https.', 'error');
+        return;
+      }
+      if (!txn) {
+        showToast('bKash TXN ID Needed', 'Please paste your bKash Transaction ID.', 'error');
+        return;
+      }
+      if (txn.length < 4) {
+        showToast('Check TXN ID', 'The transaction ID seems incomplete.', 'error');
+        return;
+      }
+
+      pendingOrder = {
+        id: generateId(),
+        service: activePackageName,
+        quantity: qty,
+        link,
+        txn,
+        bill: Number(bill),
+        reactType: activeServiceType === 'react' ? reactType : '',
+        customerWhatsapp,
+        status: 'Pending',
+        createdAt: Date.now()
+      };
+
+      document.getElementById('sum-service').innerText = pendingOrder.service;
+      document.getElementById('sum-qty').innerText = pendingOrder.quantity;
+      document.getElementById('sum-link').innerText = pendingOrder.link.length > 52 ? pendingOrder.link.slice(0, 52) + '…' : pendingOrder.link;
+      document.getElementById('sum-txn').innerText = pendingOrder.txn;
+      document.getElementById('sum-bill').innerText = `${pendingOrder.bill.toFixed(2)} BDT`;
+
+      const reactRow = document.getElementById('sum-react-row');
+      if (pendingOrder.reactType) {
+        document.getElementById('sum-react').innerText = pendingOrder.reactType + ' React';
+        reactRow.style.display = 'flex';
+      } else {
+        reactRow.style.display = 'none';
+      }
+
+      openSummary();
+      showToast('Review Order', 'Please double check details before confirming.', 'success');
+    }
+
+    document.getElementById('summary-cancel').addEventListener('click', closeSummary);
+    document.getElementById('summary-confirm').addEventListener('click', () => {
+      if (!pendingOrder) return;
+      closeSummary();
+      showLoading('Saving Order', 'Securing connection to WhatsApp...');
+
+      const orders = getOrders();
+      orders.unshift(pendingOrder);
+      saveOrders(orders);
+
+      const waAdminMsg = [
+        `⚡ NEW ORDER RECEIVED ⚡`,
+        ``,
+        `Order ID: ${pendingOrder.id}`,
+        `Service: ${pendingOrder.service}`,
+        `Quantity: ${pendingOrder.quantity}`,
+        pendingOrder.reactType ? `React Type: ${pendingOrder.reactType} React` : null,
+        `Target Link: ${pendingOrder.link}`,
+        `bKash TXN ID: ${pendingOrder.txn}`,
+        `Bill: ${pendingOrder.bill.toFixed(2)} BDT`,
+        pendingOrder.customerWhatsapp ? `Customer WhatsApp: ${pendingOrder.customerWhatsapp}` : null,
+        `Status: Pending`
+      ].filter(Boolean).join('\n');
+
+      pendingWhatsAppUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waAdminMsg)}`;
+
+      setTimeout(() => {
+        hideLoading();
+        window.open(pendingWhatsAppUrl, '_blank', 'noopener');
+        showToast('Order Submitted', 'Your order is locked and saved.', 'success');
+        pendingOrder = null;
+      }, 1000);
+    });
+
+    function loginAdmin() {
+      const email = document.getElementById('admin-email').value.trim();
+      const password = document.getElementById('admin-password').value.trim();
+      if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+        localStorage.setItem(ADMIN_KEY, 'yes');
+        adminLogin.style.display = 'none';
+        adminDashboard.style.display = 'block';
+        renderAdmin();
+        showToast('Access Granted', 'Welcome back, Administrator.', 'success');
+      } else {
+        showToast('Authentication Failed', 'Invalid credentials, try again.', 'error');
+      }
+    }
+
+    function logoutAdmin() {
+      localStorage.removeItem(ADMIN_KEY);
+      adminLogin.style.display = 'block';
+      adminDashboard.style.display = 'none';
+      showToast('Logged Out', 'Your session has ended.', 'info');
+    }
+
+    function setStatus(id, status) {
+      const orders = getOrders();
+      const idx = orders.findIndex(o => o.id === id);
+      if (idx !== -1) {
+        orders[idx].status = status;
+        saveOrders(orders);
+        showToast('Status Updated', `${id} updated to: ${status}`, 'success');
+      }
+    }
+
+    function deleteOrder(id) {
+      const orders = getOrders().filter(o => o.id !== id);
+      saveOrders(orders);
+      showToast('Order Removed', `ID ${id} was deleted.`, 'info');
+    }
+
+    function renderAdmin() {
+      const orders = getOrders();
+      const total = orders.length;
+      const pending = orders.filter(o => o.status === 'Pending').length;
+      const completed = orders.filter(o => o.status === 'Completed').length;
+      const revenue = orders.reduce((sum, o) => sum + (Number(o.bill) || 0), 0);
+
+      document.getElementById('stat-total').innerText = total;
+      document.getElementById('stat-pending').innerText = pending;
+      document.getElementById('stat-completed').innerText = completed;
+      document.getElementById('stat-revenue').innerText = revenue.toFixed(2);
+
+      const body = document.getElementById('orders-body');
+      body.innerHTML = '';
+
+      if (!orders.length) {
+        body.innerHTML = `<tr><td colspan="8" class="muted" style="text-align: center; padding: 40px;">No current orders are registered.</td></tr>`;
+        return;
+      }
+
+      orders.forEach(order => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${order.id}</strong></td>
+          <td>${formatDate(order.createdAt)}</td>
+          <td>
+            <strong>${order.service}</strong>
+            ${order.reactType ? '<br><span class="muted">' + order.reactType + ' React</span>' : ''}
+          </td>
+          <td>${order.quantity}</td>
+          <td><code>${order.txn}</code></td>
+          <td><strong>${Number(order.bill).toFixed(2)} ৳</strong></td>
+          <td><span class="badge ${order.status.toLowerCase()}">${order.status}</span></td>
+          <td>
+            <div class="row">
+              <button class="chip" onclick="setStatus('${order.id}','Pending')">Pending</button>
+              <button class="chip" onclick="setStatus('${order.id}','Confirmed')">Confirm</button>
+              <button class="chip" onclick="setStatus('${order.id}','Processing')">Process</button>
+              <button class="chip" onclick="setStatus('${order.id}','Completed')">Complete</button>
+              <button class="chip" onclick="setStatus('${order.id}','Cancelled')">Cancel</button>
+              <button class="chip btn-danger" onclick="deleteOrder('${order.id}')">Delete</button>
+            </div>
+          </td>
+        `;
+        body.appendChild(tr);
+      });
+    }
+
+    function seedDemoOrders() {
+      const orders = getOrders();
+      orders.unshift(
+        {
+          id: generateId(),
+          service: 'Facebook BD Follower',
+          quantity: 1000,
+          link: 'https://facebook.com/example',
+          txn: 'TRX125F6B',
+          bill: 125,
+          reactType: '',
+          customerWhatsapp: '01711111111',
+          status: 'Pending',
+          createdAt: Date.now() - 5600000
+        },
+        {
+          id: generateId(),
+          service: 'Facebook Post React BD',
+          quantity: 2000,
+          link: 'https://facebook.com/post/example',
+          txn: 'TRX987R3X',
+          bill: 278,
+          reactType: 'Love',
+          customerWhatsapp: '01922222222',
+          status: 'Confirmed',
+          createdAt: Date.now() - 2200000
         }
+      );
+      saveOrders(orders);
+      showToast('Demo Orders Added', 'Successfully generated mock orders for preview.', 'success');
+    }
 
-        // ইনস্টাগ্রাম, ইউটিউব, টিকটকের জন্য ডিরেক্ট হোয়াটসঅ্যাপ রিডাইরেক্ট
-        function directToWhatsApp(platformName) {
-            let textMessage = `Hello SS Cyber Panel! I am looking for ${platformName} Services. Please provide me details and pricing.`;
-            let whatsappUrl = `https://wa.me/${myWhatsApp}?text=${encodeURIComponent(textMessage)}`;
-            window.open(whatsappUrl, '_blank');
-        }
+    function clearAllOrders() {
+      localStorage.removeItem(STORAGE_KEY);
+      renderAdmin();
+      showToast('Cleared Database', 'All orders have been permanently cleared.', 'info');
+    }
 
-        // ফেসবুক প্যাকেজ সিলেক্ট করার পর ফর্ম স্ক্রিন রেডি করা
-        function setupOrderForm(packageName, pricePer1k, type) {
-            activePackageName = packageName;
-            activePricePer1k = pricePer1k;
-            activeServiceType = type;
+    window.addEventListener('click', (e) => {
+      if (e.target === summaryBackdrop) closeSummary();
+      if (e.target === loadingOverlay) hideLoading();
+    });
 
-            // ফর্মের হেডার চেঞ্জ করা
-            document.getElementById('form-service-title').innerText = packageName;
-            
-            // পূর্বের ডেটা রিসেট
-            document.getElementById('order-quantity').value = '';
-            document.getElementById('target-url').value = '';
-            document.getElementById('live-bill').innerText = '0';
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeSummary();
+        hideLoading();
+      }
+    });
 
-            // রিঅ্যাক্ট অপশন অন/অফ লজিক
-            if (type === 'react') {
-                document.getElementById('react-selection-group').style.style.display = 'block'; // ভুল টাইপো ফিক্স করা হলো নিচের লাইনে
-                document.getElementById('react-selection-group').style.display = 'block';
-            } else {
-                document.getElementById('react-selection-group').style.display = 'none';
-            }
-
-            // ডায়নামিক লিংক টেক্সট চেঞ্জ
-            if (type === 'follower') {
-                document.getElementById('dynamic-link-label').innerText = 'Page / Profile Link';
-            } else {
-                document.getElementById('dynamic-link-label').innerText = 'Post Link';
-            }
-
-            // ফর্ম স্ক্রিনে নিয়ে যাওয়া
-            navigateTo('screen-order-form');
-        }
-
-        // রিয়েল-টাইম বিল হিসাব
-        function updateLiveBill() {
-            let qty = document.getElementById('order-quantity').value;
-            let currentTotal = (qty / 1000) * activePricePer1k;
-            document.getElementById('live-bill').innerText = currentTotal > 0 ? currentTotal.toFixed(2) : '0';
-        }
-
-        // হোয়াটসঅ্যাপে ডেটা সাবমিট করা
-        function sendOrderToWhatsApp() {
-            let qty = document.getElementById('order-quantity').value;
-            let linkUrl = document.getElementById('target-url').value;
-            let finalBill = document.getElementById('live-bill').innerText;
-            let chosenReact = document.getElementById('react-type').value;
-
-            if (!qty || !linkUrl) {
-                alert("Please fill up the quantity and insert a valid link.");
-                return;
-            }
-
-            let finalMessage = `*⚡ NEW ORDER - SS CYBER PANEL ⚡*\n\n`;
-            finalMessage += `• *Service Name:* ${activePackageName}\n`;
-            
-            if (activeServiceType === 'react') {
-                finalMessage += `• *React Type:* ${chosenReact} React\n`;
-            }
-            
-            finalMessage += `• *Quantity Required:* ${qty}\n`;
-            finalMessage += `• *Target Link:* ${linkUrl}\n`;
-            finalMessage += `• *Calculated Bill:* ${finalBill} BDT\n\n`;
-            finalMessage += `Please accept the order and send payment details.`;
-
-            let waUrl = `https://wa.me/${myWhatsApp}?text=${encodeURIComponent(finalMessage)}`;
-            window.open(waUrl, '_blank');
-        }
-    </script>
+    if (localStorage.getItem(ADMIN_KEY) === 'yes') {
+      adminLogin.style.display = 'none';
+      adminDashboard.style.display = 'block';
+      renderAdmin();
+    }
+  </script>
 </body>
 </html>
